@@ -33,8 +33,18 @@ function App() {
 
   // Remove Clicked Product
   const removeFromCart = (product) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== product.id));
-    setCartCount(cart.length - 1);
+    setCart((prevCart) => {
+      // finding 1st index of product match
+      const productIndex = prevCart.findIndex((item) => item.id === product.id);
+      if (productIndex !== -1) {
+        const updatedCart = [...prevCart];
+        updatedCart.splice(productIndex, 1); 
+        return updatedCart;
+      }
+      return prevCart;
+    });
+
+    setCartCount(prevCount => Math.max(prevCount - 1, 0))
     console.log(`Product Removed :${JSON.stringify(product)}`);
   };
 
@@ -52,7 +62,7 @@ function App() {
         <div className="products">
           {productsData.data.map((category, categoryIndex) => {
             return (
-              <div className="product" key={categoryIndex}> 
+              <div className="product" key={categoryIndex}>
                 <h4>{category.name}</h4>
                 <hr />
                 <div className="same-category">
